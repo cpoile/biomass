@@ -47,5 +47,7 @@
 
 (defn send-request
   [operation params]
-  (let [final-params (merge params (get-default-params operation))]
-    (client/get $BASE_URL {:query-params final-params})))
+  (if (and @aws-access-key @aws-secret-access-key)
+    (let [final-params (merge params (get-default-params operation))]
+      (client/get $BASE_URL {:query-params final-params}))
+    {:error "AWS credentials are unset."}))

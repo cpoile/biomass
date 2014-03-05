@@ -8,8 +8,9 @@
 (defn- send-and-parse
   [operation params]
   (let [resp (send-request operation params)]
-    (when (= (:status resp) 200)
-      (parse operation (:body resp)))))
+    (if (= (:status resp) 200)
+      (parse operation (:body resp))
+      resp)))
 
 (defn create-hit-with-type-id
   [{:keys [hit-type-id hit-layout-id assignment-duration
