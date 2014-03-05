@@ -6,11 +6,18 @@
             [biomass.util :as util]
             [xml-to-clj.core :as xc]))
 
-(defn- send-and-parse
+(defn- send-and-parse2
   [operation params]
   (let [resp (send-request operation params)]
     (if (= (:status resp) 200)
       (parse operation resp)
+      resp)))
+
+(defn- send-and-parse
+  [operation params]
+  (let [resp (send-request operation params)]
+    (if (= (:status resp) 200)
+      (xc/xml-to-clj (:body resp))
       resp)))
 
 (defn create-hit-with-type-id
