@@ -3,7 +3,8 @@
   biomass.hits
   (:require [biomass.request :refer :all]
             [biomass.response.hits :refer :all]
-            [biomass.util :as util]))
+            [biomass.util :as util]
+            [xml-to-clj.core :as xc]))
 
 (defn- send-and-parse
   [operation params]
