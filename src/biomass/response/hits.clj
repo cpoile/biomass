@@ -136,8 +136,16 @@
            :hit-id ($x:text? (str base-xpath "/HIT/HITId") doc)
            :hit-type-id ($x:text? (str base-xpath "/HIT/HITTypeId") doc)}}))
 
+(defn aws-error?
+  [{:keys [doc]}]
+  ($x:text? "//Error" doc))
+
 (defn parse
-  [operation xml-response-body]
-  (parse-by-operation {:operation operation
-                       :doc (xml->doc xml-response-body)
-                       :xml xml-response-body}))
+  [operation response]
+  (let [xml-response-body (:body response)
+        response-map {:operation operation
+                      :doc (xml->doc xml-response-body)
+                      :xml xml-response-body}]
+    (if-let [error-msg (aws-error? response-map)]
+      (assoc response :error-message error-msg)
+      (parse-by-operation response-map))))

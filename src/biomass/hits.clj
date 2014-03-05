@@ -9,7 +9,7 @@
   [operation params]
   (let [resp (send-request operation params)]
     (if (= (:status resp) 200)
-      (parse operation (:body resp))
+      (parse operation resp)
       resp)))
 
 (defn create-hit-with-type-id
