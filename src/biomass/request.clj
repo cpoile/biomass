@@ -10,7 +10,8 @@
 (defonce $HMAC_ALGORITHM "HmacSHA1")
 (defonce $API_VERSION "2012-03-25")
 (defonce $SERVICE "AWSMechanicalTurkRequester")
-(defonce $BASE_URL "https://mechanicalturk.sandbox.amazonaws.com/")
+;; default to sandbox
+(def $BASE_URL (atom "https://mechanicalturk.sandbox.amazonaws.com/"))
 
 (def aws-access-key (ref nil))
 (def aws-secret-access-key (ref nil))
@@ -20,6 +21,16 @@
   (dosync
    (ref-set aws-access-key AWSAccessKey)
    (ref-set aws-secret-access-key AWSSecretAccessKey)))
+
+(defn set-aws-target-as-sandbox
+  [sandbox?]
+  (if sandbox?
+    (reset! $BASE_URL "https://mechanicalturk.sandbox.amazonaws.com/")
+    (reset! $BASE_URL "https://mechanicalturk.amazonaws.com/")))
+
+(defn is-aws-target-sandbox?
+  []
+  (= @$BASE_URL "https://mechanicalturk.sandbox.amazonaws.com/"))
 
 (defn gen-aws-signature
   "Generates an RFC 2104 compliant HMAC for AWS authentication as
@@ -49,5 +60,5 @@
   [operation params]
   (if (and @aws-access-key @aws-secret-access-key)
     (let [final-params (merge params (get-default-params operation))]
-      (client/get $BASE_URL {:query-params final-params}))
+      (client/get @$BASE_URL {:query-params final-params}))
     {:error "AWS credentials are unset."}))
