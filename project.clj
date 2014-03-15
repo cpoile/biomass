@@ -12,7 +12,8 @@
                                                 commons-codec]] ;; only this because ring-codec is behind
                  [clj-time "0.6.0"]
                  [com.github.kyleburton/clj-xpath "1.4.3"]
-                 [com.github.cpoile/xml-to-clj "0.9.0"]]
+                 [com.github.cpoile/xml-to-clj "0.9.0"]
+                 [org.clojars.seancorfield/clj-soap "0.2.0"]]
   :profiles {:dev {:dependencies [[midje "1.6.2"]]
                    :resource-paths ["test-resources"]
                    :plugins [[lein-midje "3.0.0"]]}})
