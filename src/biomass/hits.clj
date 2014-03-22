@@ -103,7 +103,7 @@
                     :Reward.1.Amount reward-amount
                     :Reward.1.CurrencyCode reward-currency
                     :AssignmentDurationInSeconds assignment-duration
-                    :keywords keywords}]
+                    :Keywords keywords}]
     (send-and-parse "RegisterHITType" (merge hit-params qual-params))))
 
 

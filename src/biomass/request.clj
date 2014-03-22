@@ -3,12 +3,9 @@
   biomass.request
   (:require [ring.util.codec :as codec]
             [clj-time.local :refer [local-now format-local-time]]
-            [clj-http.client :as client]
-            [clj-soap.core :as soap])
+            [clj-http.client :as client])
   (:import (javax.crypto Mac)
-           (javax.crypto.spec SecretKeySpec)
-           (org.apache.commons.httpclient.protocol Protocol)
-           (org.apache.commons.httpclient.contrib.ssl StrictSSLProtocolSocketFactory)))
+           (javax.crypto.spec SecretKeySpec)))
 
 (defonce $HMAC_ALGORITHM "HmacSHA1")
 (defonce $API_VERSION "2012-03-25")
@@ -51,6 +48,7 @@ retry_delay_millis=1000" access-key secret-key service-url)))
       (reset! $BASE_URL "https://mechanicalturk.amazonaws.com/")
       (reset! $SOAP_URL "https://mechanicalturk.amazonaws.com?Service=AWSMechanicalTurkRequester")
       (reset! $SOAP_WSDL "http://mechanicalturk.amazonaws.com/AWSMechanicalTurk/2012-03-25/AWSMechanicalTurkRequester.wsdl")
+      (write-mturk-properties @aws-access-key @aws-secret-access-key @$SOAP_URL)
       (reset! $SANDBOX false))))
 
 (defn is-aws-target-sandbox? [] @$SANDBOX)
@@ -93,18 +91,20 @@ retry_delay_millis=1000" access-key secret-key service-url)))
       (client/post @$BASE_URL {:query-params final-params}))
     {:error "AWS credentials are unset."}))
 
-(defn build-soap-request
-  []
-  (let [http-headers {:X-Amazon-Software, "MTurkJavaSDK/1.6.2"}]
-    (System/setProperty "axis.ClientConfigFile" "biomass/mturk-client-config.wsdd")))
+;; (defn build-soap-request
+;;   []
+;;   (let [http-headers {:X-Amazon-Software, "MTurkJavaSDK/1.6.2"}]
+;;     (System/setProperty "axis.ClientConfigFile" "biomass/mturk-client-config.wsdd")))
 
-(defn send-soap
-  [operation params]
-  (if (and @aws-access-key @aws-secret-access-key)
-    (let [final-params (merge params
-                              (dissoc (get-default-params operation) :Operation))
-          client (soap/client-fn @$SOAP_WSDL @$SOAP_URL
-                                        ;"https://mechanicalturk.sandbox.amazonaws.com?Service=AWSMechanicalTurkRequester"
-                                 )]
-      (client operation {:query-params final-params}))
-    {:error "AWS credentials are unset."}))
+;; (defn send-soap
+;;   [operation params]
+;;   (if (and @aws-access-key @aws-secret-access-key)
+;;     (let [final-params (merge params
+;;                               (dissoc (get-default-params operation) :Operation))
+;;           ;;client (soap/client-fn @$SOAP_WSDL @$SOAP_URL
+;;                                         ;"https://mechanicalturk.sandbox.amazonaws.com?Service=AWSMechanicalTurkRequester"
+;;                           )]
+;;       ;(client operation {:query-params final-params})
+;;     )
+;;     {:error "AWS credentials are unset."})
+; )

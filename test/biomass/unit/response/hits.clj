@@ -7,7 +7,7 @@
 (def $search-hits-response (slurp (io/resource "search_hits_example_response.xml")))
 
 (fact "GetHIT response is parsed correctly"
-  (parse "GetHIT" $get-hit-response)
+      (parse "GetHIT" {:body $get-hit-response})
   => (just {:request {:request-id "ff72a6c9-33f5-477d-8cd9-c9a43708c965"}
             :hits (just (contains {:assignment-duration-in-seconds 3600
                                    :auto-approval-delay-in-seconds 604800
@@ -32,7 +32,7 @@
 
 
 (fact "SearchHITs response is parsed correctly"
-  (parse "SearchHITs" $search-hits-response)
+      (parse "SearchHITs" {:body  $search-hits-response})
   => (just {:request {:request-id "54f2f090-8e6d-46f0-9cf9-0ce38acaa211"}
             :result (contains {:request (just {:valid? true})
                                :num-results 1

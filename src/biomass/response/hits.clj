@@ -30,7 +30,8 @@
    :number-of-assignments-available (util/nil-or-integer
                                      ($x:text? "NumberOfAssignmentsAvailable" doc))
    :number-of-assignments-completed (util/nil-or-integer
-                                     ($x:text? "NumberOfAssignmentsCompleted" doc))})
+                                     ($x:text? "NumberOfAssignmentsCompleted" doc))
+   :question ($x:text? "Question" doc)})
 
 (defmulti parse-by-operation :operation)
 
