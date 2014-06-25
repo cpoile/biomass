@@ -12,7 +12,7 @@
                                                 commons-codec]] ;; only this because ring-codec is behind
                  [clj-time "0.6.0"]
                  [com.github.kyleburton/clj-xpath "1.4.3"]
-                 [com.github.cpoile/xml-to-clj "0.9.0"]
+                 [cpoile/xml-to-clj "0.9.0"]
                  [org.clojars.zaxtax/java-aws-mturk "1.6.2"]]
   :profiles {:dev {:dependencies [[midje "1.6.3"]]
                    :resource-paths ["test-resources"]
